@@ -1,0 +1,28 @@
+html {
+    position: relative;
+    /* sticks footer to the bottom */
+    min-height: 100%;
+} 
+
+body{
+    padding-top: 60px;
+    margin-bottom: 60px;
+}
+/* 
+#navTitle{
+    text-align: center;
+    font-style: bold;
+} */
+
+/* Footer has a height of 60px, body needs bottom margin to match it and top padding against the header */
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background: #ffeeee;
+}
+
+#id {
+    float: right;
+}
