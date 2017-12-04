@@ -105,32 +105,37 @@ function parseResponseShelter (responseText){
             //Divides/Places information depending on header
             switch(j) {
                 case 0:
-                    console.log("0");
                     var tdText = document.createTextNode(response[i]['name']['$t']);
                     break;
                 case 1:
-                    console.log("1");
                     var tdText = document.createTextNode(response[i]['city']['$t']);
                     break;
                 case 2:
-                    console.log("2");
                     var tdText = document.createTextNode(response[i]['zip']['$t']);
                     break;
                 case 3:
-                    console.log("3");
                     var tdText = document.createTextNode(response[i]['id']['$t']);
                     break;
                 case 4:
-                    console.log("4");
                     var tdText = document.createTextNode(response[i]['email']['$t']);
                     break;
                 case 5:
-                    console.log("5");
                     let latitude = response[i]['latitude']['$t'];
                     let longitude = response[i]['longitude']['$t'];
-                    var tdText = document.createTextNode(latitude + " , " + longitude);
+                    var tdText = document.createElement("BUTTON");
+                    var buttonText = document.createTextNode("Show Map");
+                    tdText.appendChild(buttonText);
+                    tdText.className += "btn btn-light mapToggleButton";
+
+                    var googleMap = document.createElement("IMG");
+                    googleMap.src = createMap(latitude, longitude);
+                    googleMap.className += 'visibility';
+                    td.appendChild(googleMap);
+                    //var tdText = document.createTextNode(latitude + " , " + longitude);
                     break;
-                default: var tdText = document.createTextNode("Error! Not a valid array number!");
+                default: 
+                    var tdText = document.createTextNode("Error! Not a valid array number!");
+                    break;
             }
             td.appendChild(tdText);
             tableRow.appendChild(td);
@@ -139,12 +144,31 @@ function parseResponseShelter (responseText){
     }
     table.appendChild(tableBody);
     tableResponse.appendChild(table);
-}
 
+    mapToggle = document.getElementsByClassName('mapToggleButton');
+
+    //Toggle view of google maps for individual shelters after the table is made
+    for (let i = 0; i < mapToggle.length; i++) {
+        mapToggle[i].addEventListener('click', function () {
+            var div = document.getElementsByClassName('visibility')[i];
+            div.classList.toggle("show");
+        });
+        
+    }
+
+}
 
 function createMap (latitude, longitude){
-
-    // https://maps.googleapis.com/maps/api/staticmap?center=34.1476,-117.2555&key=AIzaSyDqFxTRcfeoBx0Mkjyv6oH1E0jQIPnTeS8&size=400x400
-
-
+    let url = "https://maps.googleapis.com/maps/api/staticmap?";
+    let key = "AIzaSyDqFxTRcfeoBx0Mkjyv6oH1E0jQIPnTeS8";
+    let zoom = "13";
+    let size = "300x300";
+    return url += "center=" + latitude + "," + longitude + "&key=" + key + "&size=" + size + "&zoom=" + zoom;
+    //Example URL: https://maps.googleapis.com/maps/api/staticmap?center=34.1476,-117.2555&key=AIzaSyDqFxTRcfeoBx0Mkjyv6oH1E0jQIPnTeS8&size=400x400&zoom=13
 }
+
+
+// function toggleVisibility (className){
+
+    
+// }

@@ -55,7 +55,6 @@
                 <input type="text" class="form-control" id="locationValue" placeholder="US State|City|Zipcode" required>
                 <input type="text" class="form-control" id="shelterValue" placeholder="Name - Optional">
                 <button class="btn btn-default" id="shelterSubmit">Submit</button>
-
             </div>
             <div id="step2" class="table-responsive"></div>
         </form>
@@ -108,15 +107,20 @@
                 tableResponse.removeChild(tableResponse.firstChild);
             }
             let urlFinal = "";
-            let method = "shelter.find";6
+            let method = "shelter.find";
+            let amountDisplayed = "15";
             let locationValue = document.getElementById('locationValue').value;
             let shelterValue = document.getElementById('shelterValue').value;
             urlFinal += url + method + "?key=" + apiKey + "&format=" + format + "&location=" + locationValue;
             if (shelterValue) 
                 urlFinal += "&name=" + shelterValue;
-            urlFinal += '&callback=parseResponse' + "&count=15";
+            urlFinal += '&callback=parseResponse' + "&count=" + amountDisplayed;
             requestJSONP(urlFinal);
         });
+        
+
+
+
     </script>
 
 

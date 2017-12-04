@@ -8,6 +8,14 @@ body{
     padding-top: 60px;
     margin-bottom: 60px;
 }
+
+.visibility{
+    display: none;
+}
+
+show{
+    display: inline;
+}
 /* 
 #navTitle{
     text-align: center;
@@ -26,3 +34,4 @@ body{
 #id {
     float: right;
 }
+
