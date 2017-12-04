@@ -4,6 +4,14 @@ html {
     min-height: 100%;
 } 
 
+h1 {
+    font-family: 'Lato', sans-serif;
+}
+
+p {
+    font-family: 'Abel', sans-serif;
+}
+
 body{
     padding-top: 60px;
     margin-bottom: 60px;
@@ -13,14 +21,9 @@ body{
     display: none;
 }
 
-show{
+.show{
     display: inline;
 }
-/* 
-#navTitle{
-    text-align: center;
-    font-style: bold;
-} */
 
 /* Footer has a height of 60px, body needs bottom margin to match it and top padding against the header */
 #footer {

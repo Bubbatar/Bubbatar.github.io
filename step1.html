@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ready, Set. Adopt!</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./main.css">
+    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+
+</head>
+<body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="./index.html" class="navbar-brand">
+                    <span id="navTitle">Ready. Set? Adopt!</span>
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#">About Us</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="mailto:peterchhanchau@gmail.com">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <nav>
+        <div class="container">
+            <ul class="pagination">
+                <li>
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li class="active">
+                    <a href="step1.html">Step 1</a>
+                </li>
+                <li>
+                    <a href="#">3</a>
+                </li>
+                <li>
+                    <a href="#">4</a>
+                </li>
+                <li>
+                    <a href="#">5</a>
+                </li>
+                <li>
+                    <a href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Step 1) Find a Shelter near you!</h1>
+        <p>Start by searching for a local animal shelter near you! Enter below your zipcode, city or state to discover animal shelters
+            near you!</p>
+        <p>If you already have a specific shelter in mind, you may enter it along.</p>
+        <form class="form-inline" action="#" method="GET">
+            <div class="form-group">
+                <label for="locationValue">Name</label>
+                <input type="text" class="form-control" id="locationValue" placeholder="US State|City|Zipcode" required>
+                <input type="text" class="form-control" id="shelterValue" placeholder="Name - Optional">
+                <button class="btn btn-default" id="shelterSubmit">Submit</button>
+            </div>
+            <div id="tableInsert" class="table-responsive"></div>
+        </form>
+    </div>
+    
+    
+    <footer id="footer">
+        <div class="container">
+            <p>By Peter Chau</p>
+        </div>
+    </footer>
+    
+
+
+
+    <script src="./ajax.js"></script>
+    <script src="./parse-response.js"></script>
+
+    <script>
+        var apiKey = "def0abea54a29a359461fc7b72c5b30d";
+        var tableResponse = document.getElementById('tableInsert');
+        var format = "json";
+        var url = "https://api.petfinder.com/";
+
+        document.getElementById('shelterSubmit').addEventListener('click', function () {
+            while (tableResponse.firstChild) {
+                tableResponse.removeChild(tableResponse.firstChild);
+            }
+            let urlFinal = "";
+            let method = "shelter.find";
+            let amountDisplayed = "15";
+            let locationValue = document.getElementById('locationValue').value;
+            let shelterValue = document.getElementById('shelterValue').value;
+            urlFinal += url + method + "?key=" + apiKey + "&format=" + format + "&location=" + locationValue;
+            if (shelterValue)
+                urlFinal += "&name=" + shelterValue;
+            urlFinal += '&callback=parseResponse' + "&count=" + amountDisplayed;
+            requestJSONP(urlFinal);
+        });
+
+    </script>
+
+</body>
+</html>

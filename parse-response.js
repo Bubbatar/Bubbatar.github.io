@@ -75,7 +75,7 @@ Creates a table based off API information on User shelter
 
 */
 function parseResponseShelter (responseText){
-    let tableResponse = document.getElementById('step2');
+    let tableResponse = document.getElementById('tableInsert');
     let response = responseText['petfinder']['shelters']['shelter'];
     if (!response) {
         alert("Incomplete API response or mismatched error");

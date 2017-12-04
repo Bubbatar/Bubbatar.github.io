@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ready. Set? Adopt!</title>
+    <title>Ready, Set. Adopt!</title>
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
         crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./main.css">
     <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 </head>
 
 <body>
@@ -23,6 +25,7 @@
                     <a href="#">About Us</a>
                 </li>
             </ul>
+            
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <a href="mailto:peterchhanchau@gmail.com">Contact</a>
@@ -30,34 +33,41 @@
             </ul>
         </div>
     </nav>
-<!-- https://api.petfinder.com/petfinderShelterRecordList?key=def0abea54a29a359461fc7b72c5b30d&format=json& -->
-    <!-- <div class="container">
-        <h1>Step 2) Not sure what type of breed you want?</h1>
-        <p>Search for the list of breeds of an animal by entering one here! (Ex: bird, cat, dog, horse, reptile, and more!)</p>
-        <p>Pick your top 5 breeds of your favorite animal.</p>
-        <form action="#" method="GET" class="form-inline">
-            <div class="form-group">
-                <label for="breedValue">Animals</label>
-                <input type="text" class="form-control" id="breedValue" placeholder="Enter any animal">
-            </div>
-            <button class="btn btn-default" type="submit" id="breedValueSubmit">Submit</button>
-        </form>
-        <span id="step1"></span>
-    </div>     -->
 
-    <div class="container">
-        <h1>Step 1) Find a Shelter near you!</h1>
-        <p>Start by searching for a local animal shelter near you! Enter below your zipcode, city or state to discover animal shelters near you!</p>
-        <p>If you already have a specific shelter in mind, you may enter it along.</p>
-        <form class="form-inline" action="#" method="GET">
-            <div class="form-group">
-                <label for="locationValue">Name</label>
-                <input type="text" class="form-control" id="locationValue" placeholder="US State|City|Zipcode" required>
-                <input type="text" class="form-control" id="shelterValue" placeholder="Name - Optional">
-                <button class="btn btn-default" id="shelterSubmit">Submit</button>
-            </div>
-            <div id="step2" class="table-responsive"></div>
-        </form>
+    <nav>
+        <div class="container">
+            <ul class="pagination">
+                <li class="disabled">
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="step1.html">Step 1</a>
+                </li>
+                <li>
+                    <a href="#">Step 2</a>
+                </li>
+                <li>
+                    <a href="#">Step 3</a>
+                </li>
+                <li>
+                    <a href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class ="jumbotron">
+        <div class="container">
+            <h1>Ready, Set. Adopt!</h1>
+            <p>Your one-stop place to discover adoptable animals near you! Get started now by clicking the below button.</p>
+        </div>
     </div>
     
 
@@ -67,96 +77,5 @@
         </div>
     </footer>
 
-
-
-
-
-
-
-
-
-
-
-
-    <script src="./ajax.js"></script>
-    <script src="./parse-response.js"></script>
-
-    <script>
-        var apiKey = "def0abea54a29a359461fc7b72c5b30d";
-        //var container1 = document.querySelector('#step1');
-        var tableResponse = document.getElementById('step2');
-        var format = "json";
-        // let breedNode = container1.appendChild(document.createTextNode(" "));
-        //let shelterLocationNode = container2.appendChild(document.createTextNode(" "));
-        var url = "https://api.petfinder.com/";
-
-        // document.querySelector('#breedValueSubmit').addEventListener('click', function () {
-        //     breedNode.nodeValue = "";
-        //     let urlFinal = "";
-        //     let method = "breed.list";
-        //     let value = document.querySelector('#breedValue').value.toLowerCase();
-        //     if (!value) {
-        //         console.log("Answer is not valid");
-        //     }
-        //     urlFinal += url + method + "?key=" + apiKey + "&format=" + format + "&animal=" + value + '&callback=parseResponse';
-        //     requestJSONP(urlFinal);
-        // });
-
-        document.getElementById('shelterSubmit').addEventListener('click', function () { 
-            while(tableResponse.firstChild) {
-                tableResponse.removeChild(tableResponse.firstChild);
-            }
-            let urlFinal = "";
-            let method = "shelter.find";
-            let amountDisplayed = "15";
-            let locationValue = document.getElementById('locationValue').value;
-            let shelterValue = document.getElementById('shelterValue').value;
-            urlFinal += url + method + "?key=" + apiKey + "&format=" + format + "&location=" + locationValue;
-            if (shelterValue) 
-                urlFinal += "&name=" + shelterValue;
-            urlFinal += '&callback=parseResponse' + "&count=" + amountDisplayed;
-            requestJSONP(urlFinal);
-        });
-        
-
-
-
-    </script>
-
-
-
 </body>
-
 </html>
-
-<!-- 
-    Pag
-<nav>
-    <ul class="pagination">
-        <li>
-            <a href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        <li>
-            <a href="#">1</a>
-        </li>
-        <li>
-            <a href="#">2</a>
-        </li>
-        <li>
-            <a href="#">3</a>
-        </li>
-        <li>
-            <a href="#">4</a>
-        </li>
-        <li>
-            <a href="#">5</a>
-        </li>
-        <li>
-            <a href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-    </ul>
-</nav> -->
