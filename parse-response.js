@@ -32,7 +32,8 @@ function checkStatusCode(status) {
 }
 
 /*
-    Parses general page response and picks which function to run based off information given back
+    @param responseText is the JSON file received back
+    Parses general page response and picks which function to run based off information given back.
 */
 function parseResponse (responseText){
     let response = responseText;
@@ -41,21 +42,19 @@ function parseResponse (responseText){
         return checkStatusCode(status); 
 
     let checker = response['petfinder'];
-
     if (checker['breeds']) {
-        console.log("Function ran breed successfully!");
+        console.log("Function redirected to parseBreed successfully!");
         return parseResponseBreed(response);
     } 
     if (checker['shelters']) {
-        console.log("Function ran shelter successfully!");
+        console.log("Function redirected to parseShelter successfully!");
         return parseResponseShelter(response);
     }
 }
 
 /*
-Function parses response of when the user enters an animal
-and creates an array of breeds of the 
-
+    Function parses response of when the user enters an animal
+    and creates an array of breeds 
 */
 function parseResponseBreed(responseText) {
     var response = responseText;
@@ -71,7 +70,7 @@ function parseResponseBreed(responseText) {
 
 /*
 Creates a table based off API information on User shelter
-@param responseText is JSON file received back
+@param responseText is the JSON file received back
 
 */
 function parseResponseShelter (responseText){
@@ -81,29 +80,41 @@ function parseResponseShelter (responseText){
         alert("Incomplete API response or mismatched error");
         return;
     }
-    var table = document.createElement("table");
-    var tableBody = document.createElement("tbody");
+    createShelterTable(tableResponse, response);
+    mapToggle = document.getElementsByClassName('mapToggleButton');
 
+    //Toggle view of google maps for individual shelters after the table is made
+    for (let i = 0; i < mapToggle.length; i++) {
+        mapToggle[i].addEventListener('click', function () {
+            var div = document.getElementsByClassName('visibility')[i];
+            div.classList.toggle("show");
+        });
+    }
+}
+
+function createShelterTable (tableSpot, response){
+    var table = document.createElement("table");
     //Adds Bootstrap's CSS to the table
     table.className += "table table-bordered table-hover";
-    var shelterArray = ["Name", "City", "Zipcode", "Shelter ID", "Email", "Map"];
-
+    var tableBody = document.createElement("tbody");
     var tableRow = table.insertRow(-1);
-    //Creates Table Header based off shelterArray labels
-    for (let i = 0; i < shelterArray.length; i++) {
+    //Creates Table Header based off arrayHeaders labels
+    var arrayHeaders = ["Name", "City", "Zipcode", "Shelter ID", "Email", "Map"];
+    for (let i = 0; i < arrayHeaders.length; i++) {
         var tableHeader = document.createElement("TH");
-        var text = document.createTextNode(shelterArray[i]);
+        var text = document.createTextNode(arrayHeaders[i]);
         tableHeader.appendChild(text);
         tableRow.appendChild(tableHeader);
     }
-    //10 columns down
-    for (let i = 0; i < response.length; i++){
-        tableRow = table.insertRow(-1);    
-        //5 Header (rows)
-        for (let j = 0; j < shelterArray.length; j++){
+
+    //X Columns down
+    for (let i = 0; i < response.length; i++) {
+        tableRow = table.insertRow(-1);
+        //Y Headers (rows)
+        for (let j = 0; j < arrayHeaders.length; j++) {
             let td = document.createElement("td");
             //Divides/Places information depending on header
-            switch(j) {
+            switch (j) {
                 case 0:
                     var tdText = document.createTextNode(response[i]['name']['$t']);
                     break;
@@ -123,52 +134,33 @@ function parseResponseShelter (responseText){
                     let latitude = response[i]['latitude']['$t'];
                     let longitude = response[i]['longitude']['$t'];
                     var tdText = document.createElement("BUTTON");
-                    var buttonText = document.createTextNode("Show Map");
-                    tdText.appendChild(buttonText);
                     tdText.className += "btn btn-light mapToggleButton";
-
-                    var googleMap = document.createElement("IMG");
-                    googleMap.src = createMap(latitude, longitude);
-                    googleMap.className += 'visibility';
-                    td.appendChild(googleMap);
-                    //var tdText = document.createTextNode(latitude + " , " + longitude);
+                    var buttonText = document.createTextNode("Toggle Map");
+                    tdText.appendChild(buttonText);
+                    td.appendChild(createMapNode(latitude, longitude));
                     break;
-                default: 
+                default:
                     var tdText = document.createTextNode("Error! Not a valid array number!");
                     break;
             }
             td.appendChild(tdText);
             tableRow.appendChild(td);
         }
-        tableBody.appendChild(tableRow); 
+        tableBody.appendChild(tableRow);
     }
     table.appendChild(tableBody);
-    tableResponse.appendChild(table);
-
-    mapToggle = document.getElementsByClassName('mapToggleButton');
-
-    //Toggle view of google maps for individual shelters after the table is made
-    for (let i = 0; i < mapToggle.length; i++) {
-        mapToggle[i].addEventListener('click', function () {
-            var div = document.getElementsByClassName('visibility')[i];
-            div.classList.toggle("show");
-        });
-        
-    }
-
+    tableSpot.appendChild(table);
 }
 
-function createMap (latitude, longitude){
+function createMapNode (latitude, longitude){
     let url = "https://maps.googleapis.com/maps/api/staticmap?";
     let key = "AIzaSyDqFxTRcfeoBx0Mkjyv6oH1E0jQIPnTeS8";
     let zoom = "13";
     let size = "300x300";
-    return url += "center=" + latitude + "," + longitude + "&key=" + key + "&size=" + size + "&zoom=" + zoom;
+    let googleMap = document.createElement("IMG");
+    url += "center=" + latitude + "," + longitude + "&key=" + key + "&size=" + size + "&zoom=" + zoom;
+    googleMap.src = url;
+    googleMap.className += 'visibility';
+    return googleMap;
     //Example URL: https://maps.googleapis.com/maps/api/staticmap?center=34.1476,-117.2555&key=AIzaSyDqFxTRcfeoBx0Mkjyv6oH1E0jQIPnTeS8&size=400x400&zoom=13
 }
-
-
-// function toggleVisibility (className){
-
-    
-// }
