@@ -35,55 +35,64 @@ function checkStatusCode(status) {
     @param responseText is the JSON file received back
     Parses general page response and picks which function to run based off information given back.
 */
-function parseResponse (responseText){
-    let response = responseText;
+function parseResponse (response){
     let status = response['petfinder']['header']['status']['code']['$t'];
     if (status !== '100')
         return checkStatusCode(status); 
 
     let checker = response['petfinder'];
-    if (checker['breeds']) {
-        console.log("Function redirected to parseBreed successfully!");
-        return parseResponseBreed(response);
-    } 
     if (checker['shelters']) {
         console.log("Function redirected to parseShelter successfully!");
         return parseResponseShelter(response);
     }
-}
-
-/*
-    Function parses response of when the user enters an animal
-    and creates an array of breeds 
-*/
-function parseResponseBreed(responseText) {
-    var response = responseText;
-    var breedArray = [];
-    var breedResult = response['petfinder']['breeds']['breed'];
-    
-    for (let i = 0; i < breedResult.length; i++) {
-        breedArray.push(breedResult[i].$t);
+    if (checker['pets']){
+        console.log("Function redirected to parsePets successfully!");
+        return parseResponsePet(response);
     }
-    introBreedNode.nodeValue = breedArray;
-    return breedArray;
+
 }
-
-/*
-Creates a table based off API information on User shelter
-@param responseText is the JSON file received back
-
+/* 
+    Dynamically creates a rows/grid to display pet information.
+    @param response is the JSON file received back
 */
-function parseResponseShelter (responseText){
-    let tableResponse = document.getElementById('tableInsert');
-    let response = responseText['petfinder']['shelters']['shelter'];
+
+function parseResponsePet (response) {
+    response = response['petfinder']['pets']['pet'];
     if (!response) {
         alert("Incomplete API response or mismatched error");
         return;
     }
-    createShelterTable(tableResponse, response);
+    let content = document.getElementById('petContent');
+    //Every i# of rows each with a new div
+    //Position is used to traverse the json given.
+    for (let i = 0, position = 0; i < 3; i++) {
+        let divRow = document.createElement("DIV");
+        divRow.className += "row";
+        //Fills each row with j# of content
+        for (let j = 0; j < 3; j++, position++){
+            divRow.appendChild(createPetNode(position, response));
+        }
+        content.appendChild(divRow);
+    }
+}
+
+/*
+Creates a table based off API information on User shelter
+@param response is the JSON file received back
+
+*/
+function parseResponseShelter (response){
+    let tableResponse = document.getElementById('tableInsert');
+    response = response['petfinder']['shelters']['shelter'];
+    if (!response) {
+        alert("Incomplete API response or mismatched error");
+        return;
+    }
+
+    tableResponse.appendChild(createShelterTable(response));
     mapToggle = document.getElementsByClassName('mapToggleButton');
 
-    //Toggle view of google maps for individual shelters after the table is made
+    //Toggle view of google maps for individual shelters after list of  shelters is made
     for (let i = 0; i < mapToggle.length; i++) {
         mapToggle[i].addEventListener('click', function () {
             var div = document.getElementsByClassName('visibility')[i];
@@ -92,7 +101,68 @@ function parseResponseShelter (responseText){
     }
 }
 
-function createShelterTable (tableSpot, response){
+/* 
+    Dynamically creates and returns pets in a laid out Bootstrap row.
+    For the purpose of this website, it's been modified to only do 4.
+*/
+function createPetNode(position, response) {
+    let pet = document.createElement("DIV");
+
+    //Classes used for bootstrap aesthetics
+    pet.className += "col-md-3 col-sm-6 col-xs-12 thumbnail";
+    let gender = document.createTextNode(response[position]['sex']['$t']);
+    if (gender.nodeValue === 'F') {
+        gender.nodeValue = "Female ";
+    } else if (gender.nodeValue === 'M') {
+        gender.nodeValue = "Male ";
+    } else
+        gender.nodeValue = "? ";
+
+    let description = document.createTextNode(response[position]['description']['$t']);
+    let age = document.createTextNode(response[position]['age']['$t']);
+    let name = document.createTextNode(response[position]['name']['$t'] + ' [' + age.nodeValue + ' ' + gender.nodeValue + ' ' + response[position]['animal']['$t'] + ']');
+    let picture = document.createElement('IMG');
+    let temp = response[position]['media']['photos']['photo'];
+    let ID = document.createTextNode('[' + response[position]['id']['$t'] + ']');
+    //Searches API back for 'pn' sized pictures (Good for our purpose)
+    for (let i = 0; i < temp.length; i++) {
+        if (temp[i]['@size'] == 'pn')
+            picture.src = temp[i]['$t'];
+    }
+    let title = document.createElement('p');
+    title.appendChild(name);
+    pet.appendChild(title);
+
+    pet.appendChild(picture);
+
+    let paragraph = document.createElement('p');
+    paragraph.appendChild(description);
+    pet.appendChild(paragraph);
+    return pet;
+}
+
+/*
+    Creates and returns a static google map node of a given coordinates
+    @param latitude and logitude are used to create map
+*/
+function createMapNode (latitude, longitude){
+    let url = "https://maps.googleapis.com/maps/api/staticmap?";
+    const key = "AIzaSyDqFxTRcfeoBx0Mkjyv6oH1E0jQIPnTeS8";
+    const zoom = "13";
+    const size = "300x300";
+    let googleMap = document.createElement("IMG");
+    url += "center=" + latitude + "," + longitude + "&key=" + key + "&size=" + size + "&zoom=" + zoom;
+    googleMap.src = url;
+    googleMap.className += 'visibility';
+    return googleMap;
+}
+
+
+/*
+    Creates a table of shelters based off user input of a zipcode or state
+
+*/
+function createShelterTable (response) {
     var table = document.createElement("table");
     //Adds Bootstrap's CSS to the table
     table.className += "table table-bordered table-hover";
@@ -107,10 +177,10 @@ function createShelterTable (tableSpot, response){
         tableRow.appendChild(tableHeader);
     }
 
-    //X Columns down
+    //X# of columns down
     for (let i = 0; i < response.length; i++) {
         tableRow = table.insertRow(-1);
-        //Y Headers (rows)
+        //Y# of Headers (rows)
         for (let j = 0; j < arrayHeaders.length; j++) {
             let td = document.createElement("td");
             //Divides/Places information depending on header
@@ -149,18 +219,5 @@ function createShelterTable (tableSpot, response){
         tableBody.appendChild(tableRow);
     }
     table.appendChild(tableBody);
-    tableSpot.appendChild(table);
-}
-
-function createMapNode (latitude, longitude){
-    let url = "https://maps.googleapis.com/maps/api/staticmap?";
-    let key = "AIzaSyDqFxTRcfeoBx0Mkjyv6oH1E0jQIPnTeS8";
-    let zoom = "13";
-    let size = "300x300";
-    let googleMap = document.createElement("IMG");
-    url += "center=" + latitude + "," + longitude + "&key=" + key + "&size=" + size + "&zoom=" + zoom;
-    googleMap.src = url;
-    googleMap.className += 'visibility';
-    return googleMap;
-    //Example URL: https://maps.googleapis.com/maps/api/staticmap?center=34.1476,-117.2555&key=AIzaSyDqFxTRcfeoBx0Mkjyv6oH1E0jQIPnTeS8&size=400x400&zoom=13
+    return table;
 }

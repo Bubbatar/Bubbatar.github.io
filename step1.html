@@ -10,9 +10,7 @@
     <link rel="stylesheet" type="text/css" href="./main.css">
     <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -29,21 +27,21 @@
         <div class="container">
             <ul class="pagination">
                 <li>
-                    <a href="index.html" aria-label="Previous">
+                    <a href="./index.html" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
                 <li class="active">
-                    <a href="step1.html">Step 1</a>
+                    <a href="./step1.html">Step 1</a>
                 </li>
                 <li>
-                    <a href="#">Step 2</a>
+                    <a href="./step2.html">Step 2</a>
                 </li>
                 <li>
-                    <a href="#">Step 3</a>
+                    <a href="./step3.html">Step 3</a>
                 </li>
                 <li>
-                    <a href="#" aria-label="Next">
+                    <a href="./step2.html" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
@@ -51,16 +49,18 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container mainText">
         <h1>Step 1) Find a Shelter near you!</h1>
         <p>Start by searching for a local animal shelter near you! Enter below your zipcode or state to discover animal shelters
             near you!</p>
         <p>If you already have a specific shelter name in mind, you may enter it along.</p>
+        
+        <p>Once you found a shelter near you, make sure to <span class="bold">copy the Shelter ID</span> for the next step!</p>
         <form class="form-inline" action="#" method="GET">
             <div class="form-group">
                 <input type="text" class="form-control" id="locationValue" placeholder="US State OR Zipcode" required>
                 <input type="text" class="form-control" id="shelterValue" placeholder="Shelter Name - Optional">
-                <button class="btn btn-default" id="shelterSubmit"><span class="glyphicon glyphicon-circle-arrow-right"></span> Submit</button>
+                <input type="button" class="btn btn-default" id="shelterSubmit" value="Submit">
             </div>
             <div id="tableInsert" class="table-responsive"></div>
         </form>
@@ -101,18 +101,18 @@
     <script src="./ajax.js"></script>
     <script src="./parse-response.js"></script>
     <script>
-        var apiKey = "def0abea54a29a359461fc7b72c5b30d";
+        const apiKey = "def0abea54a29a359461fc7b72c5b30d";
         var tableResponse = document.getElementById('tableInsert');
-        var format = "json";
-        var url = "https://api.petfinder.com/";
+        const format = "json";
+        const url = "https://api.petfinder.com/";
     
         document.getElementById('shelterSubmit').addEventListener('click', function () {
-            let urlFinal = "";
-            let method = "shelter.find";
-            let amountDisplayed = "15";
+            let urlFinal = url;
+            const method = "shelter.find";
+            const amountDisplayed = "15";
             let locationValue = document.getElementById('locationValue').value;
             let shelterValue = document.getElementById('shelterValue').value;
-            urlFinal += url + method + "?key=" + apiKey + "&format=" + format + "&location=" + locationValue;
+            urlFinal += method + "?key=" + apiKey + "&format=" + format + "&location=" + locationValue;
             if (shelterValue)
                 urlFinal += "&name=" + shelterValue;
             urlFinal += '&callback=parseResponse' + "&count=" + amountDisplayed;

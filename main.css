@@ -6,14 +6,15 @@ html {
 
 body{
     padding-top: 60px;
-    margin-bottom: 60px;
+    margin-bottom: 85px;
 }
 
 h1 {
     font-family: 'Open Sans', sans-serif;
 }
 
-p {
+/* Applies only to original page's content and not the dynamic created results*/
+.mainText p{
     font-family: 'Lato', sans-serif;
     font-size: 1.5em;
 }
@@ -24,6 +25,29 @@ p {
 
 .show{
     display: inline;
+}
+
+/* Adds spacing between individual pet results */
+.thumbnail {
+    margin: 1%;
+}
+
+#navTitle{
+    color:white;
+}
+
+/* Adds spacing underneath submit form */
+#step2form{
+    padding-bottom: 5%;
+}
+
+.bold{
+    font-weight: bold;
+    font-style: italic;
+}
+
+.centeredText{
+    text-align: center;
 }
 
 /* Footer has a height of 60px, body needs bottom margin to match it and top padding against the header */

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 </head>
-
+<body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -23,29 +22,49 @@
             </div>
         </div>
     </nav>
-    <div class="container">
-        <h2>What is this site?</h2>
-        <p>This site is to promote animal shelters nearby you in an easy, convenient way through small peices of information you give.</p>
-        <h2>Who are you guys?</h2>
-        <p>I'm a lone-wolf student working on this site for an education purpose.</p>
-        <h2>Why should I adopt?</h2>
-        <p>I am not here to convince you to adopt, but simply to promote animal shelters over pet stores.</p>
-        <h2>Why not a pet store?</h2>
-        <p>
-            Animals sold in pet stores are sold for profit and the pet store may buy them from animal mills which disregards animal's
-            health and push for profit of phenotypes that are popular on the market.
-            See further links below: <div>(They explain it better than I could)</div>
-            <ul>
-                <li><a href="http://www.humanesociety.org/issues/adopt/tips/top_reasons_adopt.html?">Humane Society on Adopting pets</a></li>
-                <li><a href="https://www.peta2.com/news/difference-between-adopting-buying-animal/">Buying vs Adopting</a></li>
+    
+    <nav>
+        <div class="container">
+            <ul class="pagination">
+                <li>
+                    <a href="./step1.html" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="./step1.html">Step 1</a>
+                </li>
+                <li class="active">
+                    <a href="./step2.html">Step 2</a>
+                </li>
+                <li>
+                    <a href="./step3.html">Step 3</a>
+                </li>
+                <li>
+                    <a href="./step3.html" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
             </ul>
-        </p>
-        <h2>Where can I contact you?</h2>
-        <p>My email is in the contact below! Feel free to email me regarding suggestions for the site or any other matter. </p>
-        <h2>Where do the Twitter and Facebook links take me?</h2>
-        <p>They take you to an awesome organization with the same purpose as mine, getting your adopted pet.</p>
+        </div>
+    </nav>
 
+    <div class="container mainText">
+        <h1>Step 2) Find animals at your shelter!</h1>
+        <p>Search the "shelter ID" from the previous page. It should be 4-6 characters</p>
+    
+        <p>Below should be pets up for adoption with selected information about them!</p>
+        <form class="form-inline" action="#" method="GET" id="step2form">
+            <div class="form-group">
+                <input type="text" class="form-control" id="idValue" placeholder="Shelter ID (Ex: CA2354)" required>
+                <input type="button" class="btn btn-default" id="idSubmit" value="Submit">
+            </div>
+        </form>
     </div>
+
+    <div class="container" id="petContent">
+    </div>
+
     <footer id="footer">
         <div class="container">
             <div class="row">
@@ -76,5 +95,30 @@
             </div>
         </div>
     </footer>
+
+    <script src="./ajax.js"></script>
+    <script src="./parse-response.js"></script>
+    <script>
+        const apiKey = "def0abea54a29a359461fc7b72c5b30d";
+        var tableResponse = document.getElementById('petContent');
+        const format = "json";
+        const url = "https://api.petfinder.com/";    
+
+        document.getElementById('idSubmit').addEventListener('click', function () {
+            let urlFinal = url;
+            const method = "shelter.getPets";
+            const amountDisplayed = "12";
+            const output = "full";
+            const callback = "parseResponse";
+            let idValue = document.getElementById('idValue').value;
+            urlFinal += method + "?key=" + apiKey + "&format=" + format + "&id=" + idValue + "&output=" + output + '&callback=' + callback + "&count=" + amountDisplayed;
+            while (tableResponse.firstChild) {
+                tableResponse.removeChild(tableResponse.firstChild);
+            }
+            console.log(urlFinal);
+            requestJSONP(urlFinal);
+        });
+    </script>
+
 </body>
 </html>
