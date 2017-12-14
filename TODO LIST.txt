@@ -1,0 +1,3 @@
+//Opening one map closes the others
+//Clicking on a shelter code leads directly to step2 with it pasted in.
+//Add a carousel for homepage
